@@ -8,27 +8,30 @@ class Element
 {
 	int Data;      //значение элемента
 	Element* pNext;// адрес следующего элемента
-	int Size = 0;
+	static int count;
 public:
 	Element(int Data, Element* pNext = nullptr) :Data(Data), pNext(pNext)
 	{
+		count++;
 		cout << "EConstructor:\t" << this << endl;
 	}
 	~Element()
 	{
+		count--;
 		cout << "Destructor:\t" << this<< endl;
 	}
 	friend class ForwardList;
 };
+int Element::count = 0; //инициализируем статическую переменную объявленную внутри класса
 class ForwardList
 {
 	Element* Head;//голова списка,содержит указатель на нулевой элемен списка
-	int Size;
+	int size;
 public:
 	ForwardList()
 	{
-		Head = nullptr; // если списсок пуст ,то его голова указывает на 0
-		Size = 0;
+		Head = nullptr;
+		size = 0;// если списсок пуст ,то его голова указывает на 0
 		cout << "LConstructor:\t" << this << endl;
 	}
 	~ForwardList()
@@ -37,18 +40,19 @@ public:
 	}
 	int GetSize()
 	{
-		return Size;
+		return size;
 	}
 	
 	//             Adding elements:
 	void push_front(int Data)
 	{
 		// 1.Создаем новый элемент
-		Element* New = new Element(Data);
+		//Element* New = new Element(Data);
 		//2. Новый элемент должен указываать на начало спеиска
-		New->pNext = Head;
+		//New->pNext = Head;
 		//3. Голову списка "переводим" на новый элемент
-		Head = New;
+		Head = new Element(Data,Head);
+		size++;
 	}
 	void push_back(int Data)
 	{
@@ -61,7 +65,22 @@ public:
 			Temp = Temp->pNext;
 		//Добавляем элемент в конец списка
 		Temp->pNext=New;
+		size++;
 
+	}
+	void insert(int Index, int Data)
+	{
+		if (Index == 0) return push_front(Data);
+		if (Index>size) return;
+		//1.создаем новый элемент
+		Element* New = new Element(Data);
+	    //2. доходим до нужного элемента
+		Element* Temp = Head;
+		for (int i = 0; i < Index - 1; i++)
+			Temp = Temp->pNext;
+		New->pNext = Temp->pNext;
+		Temp->pNext = New;
+		size++;
 	}
 
 	void pop_front(int Data) // удаляет элемент с начала списка
@@ -69,16 +88,18 @@ public:
 		Element *Temp = Head;
 		Head = Head->pNext;
 		delete Temp;
-		Size--;
+		size--;
 	}
-	void pop_back(int Data)  // удаляет элемент с конца списка
+	void pop_back()  // удаляет элемент с конца списка
 	{
 		Element* Temp = Head;
-		while (Temp->pNext)
+		while (Temp->pNext->pNext)
 		{
 			Temp=Temp->pNext;
 		}
-		delete Temp;
+		delete Temp->pNext;
+		Temp->pNext = nullptr;
+		size--;
 	}
 	
 
@@ -94,6 +115,8 @@ public:
 			cout << Temp << tab << Temp->Data << tab << Temp->pNext << endl;
 			Temp = Temp->pNext;// переход на следующий элемент
 		}
+		cout << "колличество элементов списка: " << size<< endl;
+		cout << "общее колличество элементов списка " << size << endl;
 	}
 
 };
@@ -114,11 +137,25 @@ void main()
 	}
 	
 	list.print();
-	cout << "Элементов в списке: " << list.GetSize() << endl;
-	list.push_back(123);
+	//cout << "Элементов в списке: " << list.GetSize() << endl;
+	//list.push_back(123);
+	//list.print();
+	//list.pop_front(1);
+    //list.print();
+	//list.pop_back();
+	//list.print();
+	int value;
+	int index;
+	cout << "введите индекс добавляемого элемента: "; cin >> index;
+	cout << "введите значение добавляемого элемента: "; cin >> value;
+	list.insert(index, value);
 	list.print();
-	list.pop_front(1);
-    list.print();
-	list.pop_back(4);
+	list.pop_back();
 	list.print();
+
+	ForwardList list2;
+	list2.push_back(3);
+	list2.push_back(5);
+	list2.push_back(8);
+	list2.print();
 }
