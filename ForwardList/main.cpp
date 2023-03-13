@@ -1,13 +1,14 @@
 ﻿//ForwardList
 #include <iostream>
 #define tab "\t"
-#define delimeter   
+
 using namespace std;
 
 class Element
 {
 	int Data;      //значение элемента
-	Element* pNext;  // адрес следующего элемента
+	Element* pNext;// адрес следующего элемента
+	int Size = 0;
 public:
 	Element(int Data, Element* pNext = nullptr) :Data(Data), pNext(pNext)
 	{
@@ -21,17 +22,24 @@ public:
 };
 class ForwardList
 {
-	Element* Head; //голова списка,содержит указатель на нулевой элемен списка
+	Element* Head;//голова списка,содержит указатель на нулевой элемен списка
+	int Size;
 public:
 	ForwardList()
 	{
 		Head = nullptr; // если списсок пуст ,то его голова указывает на 0
+		Size = 0;
 		cout << "LConstructor:\t" << this << endl;
 	}
 	~ForwardList()
 	{
 		cout << "LDestructor:\t" <<this<< endl;
 	}
+	int GetSize()
+	{
+		return Size;
+	}
+	
 	//             Adding elements:
 	void push_front(int Data)
 	{
@@ -61,7 +69,20 @@ public:
 		Element *Temp = Head;
 		Head = Head->pNext;
 		delete Temp;
+		Size--;
 	}
+	void pop_back(int Data)  // удаляет элемент с конца списка
+	{
+		Element* Temp = Head;
+		while (Temp->pNext)
+		{
+			Temp=Temp->pNext;
+		}
+		delete Temp;
+	}
+	
+
+
 	//        Methods:
 	void print()const
 	{
@@ -91,9 +112,13 @@ void main()
 		list.push_back(rand()%100);
 	   
 	}
+	
 	list.print();
+	cout << "Элементов в списке: " << list.GetSize() << endl;
 	list.push_back(123);
 	list.print();
 	list.pop_front(1);
     list.print();
+	list.pop_back(4);
+	list.print();
 }
