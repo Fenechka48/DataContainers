@@ -1,7 +1,9 @@
 ﻿//ForwardList
 #include <iostream>
 #define tab "\t"
+#define delimeter   -----------------------
 using namespace std;
+
 class Element
 {
 	int Data;      //значение элемента
@@ -51,7 +53,16 @@ public:
 			Temp = Temp->pNext;
 		//Добавляем элемент в конец списка
 		Temp->pNext=New;
+
+	}
+
+	void pop_front(int Data) // удаляет элемент с начала списка
+	{
 		
+		Element *Temp = Head;
+		Head = Head->pNext;
+		delete Temp;
+
 	}
 	//        Methods:
 	void print()const
@@ -78,10 +89,13 @@ void main()
 	ForwardList list;
 	for (int i = 0; i < n; i++)
 	{
-		//ist.push_front(rand() % 100);
+		//list.push_front(rand() % 100);
 		list.push_back(rand()%100);
+	   
 	}
 	list.print();
 	list.push_back(123);
 	list.print();
+	list.pop_front(1);
+    list.print();
 }
