@@ -1,7 +1,7 @@
 ﻿//ForwardList
 #include <iostream>
 #define tab "\t"
-#define delimeter   -----------------------
+#define delimeter   
 using namespace std;
 
 class Element
@@ -58,11 +58,9 @@ public:
 
 	void pop_front(int Data) // удаляет элемент с начала списка
 	{
-		
 		Element *Temp = Head;
 		Head = Head->pNext;
 		delete Temp;
-
 	}
 	//        Methods:
 	void print()const
