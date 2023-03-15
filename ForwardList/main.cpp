@@ -58,15 +58,17 @@ public:
 	{
 		if (Head == nullptr)return push_front(Data);
 		//Создаем новый элемент
-		Element* New = new Element(Data);
-		//Доходим до конца списка
-		Element* Temp = Head;
-		while (Temp->pNext)
-			Temp = Temp->pNext;
-		//Добавляем элемент в конец списка
-		Temp->pNext=New;
-		size++;
-
+		////Element* New = new Element(Data);
+		//////Доходим до конца списка
+		////Element* Temp = Head;
+		//while (Temp->pNext)
+			//  Temp = Temp->pNext;
+		//////Добавляем элемент в конец списка
+		////Temp->pNext=New;
+		////size++;
+		Head->pNext = new Element(Data, Head);
+		size--;
+		
 	}
 	void insert(int Index, int Data)
 	{
@@ -82,6 +84,18 @@ public:
 		Temp->pNext = New;
 		size++;
 	}
+	void erase(int Index,int Data)
+	{
+		if (Index == 0) return pop_front(Data);
+		if (Index > size) return;
+		Element* Temp = Head;
+		for (int i = 0; i < Index - 1; i++)
+			Temp = Temp->pNext;
+		Element* buffer = Temp->pNext;
+		Temp->pNext = buffer->pNext;
+		delete buffer;
+		size--;
+	}
 
 	void pop_front(int Data) // удаляет элемент с начала списка
 	{
@@ -90,15 +104,17 @@ public:
 		delete Temp;
 		size--;
 	}
-	void pop_back()  // удаляет элемент с конца списка
+	void pop_back(int Index, int Data)  // удаляет элемент с конца списка
 	{
-		Element* Temp = Head;
+		/*Element* Temp = Head;
 		while (Temp->pNext->pNext)
 		{
 			Temp=Temp->pNext;
 		}
 		delete Temp->pNext;
 		Temp->pNext = nullptr;
+		size--;*/
+		erase(size - 1,Data);
 		size--;
 	}
 	
@@ -133,9 +149,7 @@ void main()
 	{
 		//list.push_front(rand() % 100);
 		list.push_back(rand()%100);
-	   
 	}
-	
 	list.print();
 	//cout << "Элементов в списке: " << list.GetSize() << endl;
 	//list.push_back(123);
@@ -148,14 +162,19 @@ void main()
 	int index;
 	cout << "введите индекс добавляемого элемента: "; cin >> index;
 	cout << "введите значение добавляемого элемента: "; cin >> value;
+	
 	list.insert(index, value);
 	list.print();
-	list.pop_back();
+	list.pop_back(index, value);
 	list.print();
 
-	ForwardList list2;
-	list2.push_back(3);
-	list2.push_back(5);
-	list2.push_back(8);
-	list2.print();
+	cout << "Введите индекс удаляемого элемента: "; cin >> index;
+	list.erase(index,value);
+	list.print();
+
+	//ForwardList list2;
+	//list2.push_back(3);
+	//list2.push_back(5);
+	//list2.push_back(8);
+	//list2.print();
 }
