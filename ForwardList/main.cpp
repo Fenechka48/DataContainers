@@ -3,6 +3,12 @@
 #define tab "\t"
 
 using namespace std;
+using std::cin;
+using std::cout;
+using std::endl;
+
+class FordwardList;
+FordwardList operator+(const FordwardList& left, const FordwardList& right);
 
 class Element
 {
@@ -77,7 +83,7 @@ public:
 		size = 0;// если списсок пуст ,то его голова указывает на 0
 		cout << "LConstructor:\t" << this << endl;
 	}
-	ForwardList(const std::initializer_list<int>& il):ForwardList()
+	ForwardList (const std::initializer_list<int>& il):ForwardList()
 	{
 		//initializer_list-il- это контейнер.Контейнер-это объект который организует хранение других объектов в памяти
 		cout << typeid(il.begin()).name() << endl;
@@ -86,12 +92,28 @@ public:
 			push_back(*it);
 		}
 	}
+	ForwardList (const ForwardList& other)
+	{
+		this->size = other.size;
+		this->Head = other.Head;
+		cout << "CopyConstructor:\t" << endl;
+	}
+
+	ForwardList (ForwardList&& other)noexcept
+	{
+		this->size = other.size;
+		this->Head = other.Head;
+		other.size = 0;
+		other.Head = nullptr;
+		cout << "MoveConstructor:\t" << this << endl;
+	}
+
 	~ForwardList()
 	{
 		while (Head)pop_front();
 		cout << "LDestructor:\t" <<this<< endl;
 	}
-	int GetSize()
+	int get_size()
 	{
 		return size;
 	}
@@ -188,7 +210,17 @@ public:
 		cout << "колличество элементов списка: " << size<< endl;
 		cout << "общее колличество элементов списка " << size << endl;
 	}
-
+	ForwardList operator+ (const ForwardList& left, const ForwardList& right)
+	{
+		//ForwardList cat(left.get_size() + right.get_size() - 1);
+		//for (int i = 0; i < left.get_size(); i++)
+		//	cat[i] = left[i];
+		////cat.get_str()[i] = left.get_str()[i];
+		//for (int i = 0; i < right.get_size(); i++)
+		//	cat[i + left.get_size() - 1] = right[i];
+		////cat.get_str()[i + left.get_size() - 1] = right.get_str()[i];
+		//return cat;
+	}
 };
 //#define BASE_CHECK
 //#define RANGE_FOR_ARRAY
@@ -257,4 +289,10 @@ void main()
 		cout << i << tab;
 	}
 	cout << endl;
+
+	ForwardList list2 = { 34,55,89 };
+	for (int i : list2)cout << i << tab; cout << endl;
+
+	ForwardList list3 = list + list2;                 // Move Constructor
+	for (int i : list3) cout << i << tab; cout << endl;
 }
