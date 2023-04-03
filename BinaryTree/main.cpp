@@ -1,5 +1,9 @@
 ﻿#include <iostream>
 using namespace std;
+using std::cin;
+using std::cout;
+using std::endl;
+
 class Tree
 {
 protected:
@@ -34,6 +38,42 @@ public:
 	{
 		cout << "TDestructor:\t" << this << endl;
 	}
+	void insert(int Data)
+	{
+		insert(Data, Root);
+	}
+	int minValue()const
+	{
+		return minValue(Root);
+	}
+	int maxValue()const
+	{
+		return maxValue(Root);
+	}
+
+	int Count()const
+	{
+		return Count(Root);
+	}
+	int Sum()const
+	{
+		return Sum(Root);
+	}
+	double Avg()
+	{
+		return (double)Sum(Root) / Count(Root);
+	}
+	int Depth()
+	{
+		return Depth(Root);
+	}
+	void print()const
+	{
+		print(Root);
+		cout << endl;
+	}
+private:
+	
 	void insert(int Data, Element* Root)
 	{
 		if (this->Root == nullptr) this->Root = new Element(Data);
@@ -45,35 +85,48 @@ public:
 		}
 		else
 		{
-			if (Root->pRight = nullptr)Root->pRight = new Element(Data);
+			if (Root->pRight == nullptr)Root->pRight = new Element(Data);
 			else insert(Data, Root->pRight);
 		}
 	}
-	int minValue(Element* Root)
+	int minValue(Element* Root) const
 	{
 		if (Root == nullptr)return 0;
 		/*if (Root->pLeft = nullptr) return Root->Data;
 		return minValue(Root->pLeft);*/
 		return Root->pLeft == nullptr ? Root->Data : minValue(Root->pLeft);
 	}
-	int maxValue(Element* Root)
+	int maxValue(Element* Root) const
 	{
 		if (Root == nullptr)return 0;
 		return Root->pRight ? maxValue(Root->pRight) : Root->Data;
 	}
-	int Count(Element* Root)
+	int Count(Element* Root) const
 	{
 		if (Root == nullptr)return 0;
 		else return Count(Root->pLeft) + Count(Root->pRight) + 1;
 	}
-	int Sum(Element* Root)
+	int Sum(Element* Root) const
 	{
 		if (Root == nullptr)return 0;
 		else return Sum(Root->pLeft) + Sum(Root->pRight) + Root->Data;
 	}
-	double Avg()
+	double Avg() const
 	{
 		return (double)Sum(Root) / Count(Root);
+	}
+	int Depth(Element* Root) const
+	{
+		if (Root == nullptr)return 0;
+		return
+			Root==nullptr ? 0:
+			Depth(Root->pLeft) + 1 >
+			Depth(Root->pRight) + 1 ?
+			Depth(Root->pLeft) + 1 :
+			Depth(Root->pRight) + 1;
+		/*if (Root == nullptr)return 0;
+		if (Depth(Root->pLeft) + 1 > Depth(Root->pRight) + 1) return Depth(Root->pLeft);
+		else return Depth(Root->pRight) + 1;*/
 	}
 	void print(Element* Root) const
 	{
@@ -110,16 +163,16 @@ void main()
 	Tree tree;
 	for (int i = 0; i < n; i++)
 	{
-		tree.insert(rand() % 100, tree.getRoot());
+		tree.insert(rand() % 100);
 	}
-	tree.print(tree.getRoot());
+	tree.print();
 	cout << endl;
-	cout << "Минимальное значение в дереве: " << tree.minValue(tree.getRoot()) << endl;
-	cout << "Максимальное значение в дереве: " << tree.maxValue(tree.getRoot()) << endl;
-	cout << "Количество элементов дерева: " << tree.Count(tree.getRoot()) << endl;
-	cout << "Сумма элементов дерева: " << tree.Sum(tree.getRoot()) << endl;
+	cout << "Минимальное значение в дереве: " << tree.minValue() << endl;
+	cout << "Максимальное значение в дереве: " << tree.maxValue() << endl;
+	cout << "Количество элементов дерева: " << tree.Count() << endl;
+	cout << "Сумма элементов дерева: " << tree.Sum() << endl;
 	cout << "Среднее арифметическое элементов: " << tree.Avg() << endl;
-
+	cout << "Глубина дерева: " << tree.Depth() << endl;
 	UniqueTree tree2;
 	for (int i = 0; i < n; i++)
 	{
@@ -129,12 +182,12 @@ void main()
 	{
 		tree2.insert(rand() % 100, tree2.getRoot());
 	}*/
-	tree2.print(tree2.getRoot());
+	tree2.print();
 	cout << endl;
-	cout << "Минимальное значение в дереве:  " << tree2.minValue(tree2.getRoot()) << endl;
-	cout << "Максимальное значение в дереве: " << tree2.maxValue(tree2.getRoot()) << endl;
-	cout << "Количество элементов дерева:" << tree2.Count(tree2.getRoot()) << endl;
-	cout << "Сумма элементов дерева: " << tree2.Sum(tree2.getRoot()) << endl;
+	cout << "Минимальное значение в дереве:  " << tree2.minValue() << endl;
+	cout << "Максимальное значение в дереве: " << tree2.maxValue() << endl;
+	cout << "Количество элементов дерева:" << tree2.Count() << endl;
+	cout << "Сумма элементов дерева: " << tree2.Sum() << endl;
 	cout << "Среднее арифметическое элементов: " << tree2.Avg() << endl;
-
+	cout << "Глубина дерева: " << tree2.Depth() << endl;
 }
