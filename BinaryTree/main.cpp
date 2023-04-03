@@ -155,10 +155,12 @@ public:
 		}
 	}
 };
+//#define BASE_CHECK
 void main()
 {
 	setlocale(LC_ALL, "");
-	int n=1000;
+#ifdef BASE_CHECK
+	int n = 1000;
 	cout << "Введите размер дерева: "; cin >> n;
 	Tree tree;
 	for (int i = 0; i < n; i++)
@@ -190,4 +192,6 @@ void main()
 	cout << "Сумма элементов дерева: " << tree2.Sum() << endl;
 	cout << "Среднее арифметическое элементов: " << tree2.Avg() << endl;
 	cout << "Глубина дерева: " << tree2.Depth() << endl;
+#endif // BASE_CHECK
+
 }
