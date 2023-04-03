@@ -94,13 +94,13 @@ public:
 	}
 	ForwardList (const ForwardList& other)
 	{
-		this->size = other.size;
-		this->Head = other.Head;
+		//Shallow copy:
 		cout << "CopyConstructor:\t" << endl;
 	}
 
 	ForwardList (ForwardList&& other)noexcept
 	{
+		//Shallow copy:
 		this->size = other.size;
 		this->Head = other.Head;
 		other.size = 0;
