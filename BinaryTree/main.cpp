@@ -40,6 +40,10 @@ public:
 	{
 		for (int i : il)insert(i);
 	}
+	Tree(const Tree& other): Tree()
+	{
+		Copy(other.Root);
+	}
 	~Tree()
 	{
 		Clear(Root);
@@ -77,6 +81,13 @@ public:
 	void Clear()
 	{
 		Clear(Root);
+	}
+	void Copy(Element* Root)
+	{
+		if (Root == nullptr)return;
+		insert(Root->Data, this->Root);
+		Copy(Root->pLeft);
+		Copy(Root->pRight);
 	}
 	void print()const
 	{
@@ -221,6 +232,9 @@ void main()
 	Tree tree = { 50,25,75,16,32,64,80 };
 	tree.print();
 	cout << "Глубина дерева: " << tree.Depth() << endl;
+
+	Tree tree2 = tree;
+	tree2.print();
 #endif // DEPTH_CHECK
 
 }
