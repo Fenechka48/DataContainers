@@ -4,6 +4,8 @@ using std::cin;
 using std::cout;
 using std::endl;
 
+#define DEBUG
+
 class Tree
 {
 protected:
@@ -34,8 +36,13 @@ public:
 	{
 		cout << "TConstructor:\t" << this << endl;
 	}
+	Tree(const std::initializer_list<int>& il) :Tree()
+	{
+		for (int i : il)insert(i);
+	}
 	~Tree()
 	{
+		Clear(Root);
 		cout << "TDestructor:\t" << this << endl;
 	}
 	void insert(int Data)
@@ -66,6 +73,10 @@ public:
 	int Depth()
 	{
 		return Depth(Root);
+	}
+	void Clear()
+	{
+		Clear(Root);
 	}
 	void print()const
 	{
@@ -118,16 +129,27 @@ private:
 	int Depth(Element* Root) const
 	{
 		if (Root == nullptr)return 0;
-		return
+
+		int l_depth = Depth(Root->pLeft) + 1;
+		int r_depth = Depth(Root->pRight) + 1;
+		return l_depth < r_depth ? r_depth : l_depth;
+		/*return
 			Root==nullptr ? 0:
 			Depth(Root->pLeft) + 1 >
 			Depth(Root->pRight) + 1 ?
 			Depth(Root->pLeft) + 1 :
-			Depth(Root->pRight) + 1;
+			Depth(Root->pRight) + 1;*/
 		/*if (Root == nullptr)return 0;
 		if (Depth(Root->pLeft) + 1 > Depth(Root->pRight) + 1) return Depth(Root->pLeft);
 		else return Depth(Root->pRight) + 1;*/
 	}
+	void Clear(Element* Root)
+	{
+		if (Root == nullptr) return;
+		Clear(Root->pLeft);
+		Clear(Root->pRight);
+		delete Root;
+}
 	void print(Element* Root) const
 	{
 		if (Root == nullptr)return;
@@ -155,7 +177,8 @@ public:
 		}
 	}
 };
-//#define BASE_CHECK
+#define BASE_CHECK
+//#define DEPTH_CHECK
 void main()
 {
 	setlocale(LC_ALL, "");
@@ -193,5 +216,11 @@ void main()
 	cout << "Среднее арифметическое элементов: " << tree2.Avg() << endl;
 	cout << "Глубина дерева: " << tree2.Depth() << endl;
 #endif // BASE_CHECK
+#ifdef DEPTH_CHECK
+
+	Tree tree = { 50,25,75,16,32,64,80 };
+	tree.print();
+	cout << "Глубина дерева: " << tree.Depth() << endl;
+#endif // DEPTH_CHECK
 
 }
