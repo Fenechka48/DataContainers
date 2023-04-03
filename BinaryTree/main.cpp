@@ -47,8 +47,19 @@ public:
 			else insert(Data, Root->pRight);
 		}
 	}
-
-	/////////////////          Methods           /////////////////////////////
+	int minValue(Element* Root)
+	{
+		if (Root == nullptr)return 0;
+		/*if (Root->pLeft = nullptr) return Root->Data;
+		return minValue(Root->pLeft);*/
+		return Root->pLeft == nullptr ? Root->Data : minValue(Root->pLeft);
+	}
+	int maxValue(Element* Root)
+	{
+		if (Root == nullptr)return 0;
+		return Root->pRight ? maxValue(Root->pRight) : Root->Data;
+	}
+	
 	void print(Element* Root) const
 	{
 		if (Root == nullptr)return;
@@ -69,4 +80,7 @@ void main()
 		tree.insert(rand() % 100, tree.getRoot());
 	}
 	tree.print(tree.getRoot());
+	cout << endl;
+	cout << "Минимальное значение в дереве: " << tree.minValue(tree.getRoot()) << endl;
+	cout << "Максимальное значение в дереве: " << tree.maxValue(tree.getRoot()) << endl;
 }
