@@ -19,28 +19,85 @@ public:
 	Element(int Data, Element* pNext = nullptr) :Data(Data), pNext(pNext)
 	{
 		count++;
+#ifdef DEBUG
 		cout << "EConstructor:\t" << this << endl;
+#endif // DEBUG
+
 	}
 	~Element()
 	{
 		count--;
-		cout << "EDestructor:\t" << this<< endl;
+#ifdef DEBUG
+
+		cout << "EDestructor:\t" << this << endl;
+#endif // DEBUG
+
 	}
 	friend class ForwardList;
 	friend class Iterator;
+	friend ConstIterator;
 };
 int Element::count = 0; //инициализируем статическую переменную объявленную внутри класса
+
+class ConstIterator
+{
+	Element* Temp;
+public:
+	ConstIterator(Element* Temp = nullptr) :Temp(Temp)
+	{
+#ifdef DEBUG
+		cout << "ItConstructor:\t" << this << endl;
+#endif // DEBUG
+	}
+	~ConstIterator()
+	{
+#ifdef DEBUG
+		cout << "ItDestructor:\t" << this << endl;
+#endif // DEBUG
+	}
+
+	ConstIterator& operator++()
+	{
+		Temp = Temp->pNext;
+		return *this;
+	}
+
+	bool operator==(const ConstIterator& other)const
+	{
+		return this->Temp == other.Temp;
+	}
+	bool operator!=(const ConstIterator& other)const
+	{
+		return this->Temp != other.Temp;
+	}
+	const int& operator*()const
+	{
+		return Temp->Data;
+	}
+};
+
+
 class Iterator
 {
 	Element* Temp;
 public:
 	Iterator(Element* Temp = nullptr) :Temp(Temp)
 	{
+#ifdef DEBUG
+
 		cout << "ItConstructor:\t" << this << endl;
+
+#endif // DEBUG
+
 	}
 	~Iterator()
 	{
+#ifdef DEBUG
+
 		cout << "ItDestructor:\t" << this << endl;
+
+#endif // DEBUG
+
 	}
 	Iterator& operator++()
 	{
@@ -68,10 +125,21 @@ class ForwardList
 	Element* Head;//голова списка,содержит указатель на нулевой элемен списка
 	int size;
 public:
-
-	Iterator begin()
+	ConstIterator cbegin()const
 	{
 		return Head;
+	}
+	Iterator begin()const
+	{
+		return Head;
+	}
+	Iterator end()const
+	{
+		return nullptr;
+	}
+	ConstIterator cend()const
+	{
+		return nullptr;
 	}
 	Iterator end()
 	{
@@ -194,6 +262,17 @@ public:
 
 
 	//        Methods:
+	void reverse()
+	{
+		ForwardList buffer;
+		while (Head)
+		{
+			buffer.push_front(Head->Data);	//Начальный элемент добавляет в начало буфера
+			pop_front();	//удаляем начальный элемент из исходного списка
+		}
+		Head = buffer.Head;
+		buffer.Head = nullptr;
+	}
 	void print()const
 	{
 		Element* Temp = Head; // Temp- это итератор
@@ -210,20 +289,20 @@ public:
 		cout << "колличество элементов списка: " << size<< endl;
 		cout << "общее колличество элементов списка " << size << endl;
 	}
-	ForwardList operator+ (const ForwardList& left, const ForwardList& right)
-	{
-		//ForwardList cat(left.get_size() + right.get_size() - 1);
-		//for (int i = 0; i < left.get_size(); i++)
-		//	cat[i] = left[i];
-		////cat.get_str()[i] = left.get_str()[i];
-		//for (int i = 0; i < right.get_size(); i++)
-		//	cat[i + left.get_size() - 1] = right[i];
-		////cat.get_str()[i + left.get_size() - 1] = right.get_str()[i];
-		//return cat;
-	}
+	
 };
+ForwardList operator+ (const ForwardList& left, const ForwardList& right)
+{
+	ForwardList cat;
+	for (ConstIterator it = left.cbegin(); it != left.cend(); ++it)	cat.push_back((*it) *= 10);
+	for (ConstIterator it = right.cbegin(); it != right.cend(); ++it)	cat.push_back(*it);
+	return cat;
+}
 //#define BASE_CHECK
 //#define RANGE_FOR_ARRAY
+//#define RANGE_BASED_FOR_LIST
+#define HOME_WORK_1
+//#define PREFORMANCE_CHECK
 
 void main()
 {
@@ -289,10 +368,42 @@ void main()
 		cout << i << tab;
 	}
 	cout << endl;
+#ifdef RANGE_BASED_FOR_LIST
 
 	ForwardList list2 = { 34,55,89 };
 	for (int i : list2)cout << i << tab; cout << endl;
 
-	ForwardList list3 = list + list2;                 // Move Constructor
-	for (int i : list3) cout << i << tab; cout << endl;
+#endif // RANGE_BASED_FOR_LIST
+
+#ifdef HOME_WORK_1
+	ForwardList list = { 3, 5, 8, 13, 21 };
+	//list.print();
+	for (int i : list)
+	{
+		cout << i << tab;
+	}
+	cout << endl;
+
+	ForwardList list2 = { 34, 55, 89 };
+	for (int i : list2)cout << i << tab; cout << endl;
+
+	ForwardList list3 = list + list2;
+	for (int i : list3)cout << i << tab; cout << endl;
+
+	for (int i : list)cout << i << tab; cout << endl;
+#endif // HOME_WORK_1
+
+#ifdef PREFORMANCE_CHECK
+	int n;
+	cout << "Введите размер списка: "; cin >> n;
+	ForwardList list;
+	for (int i = 0; i < n; i++)
+	{
+		list.push_front(rand() % 100);
+	}
+	cout << "Список заполнен" << endl;
+	ForwardList list2 = list;
+	//for (int i : list)cout << i << tab; cout << endl;
+	//for (int i : list2)cout << i << tab; cout << endl;  
+#endif // PREFORMANCE_CHECK
 }
