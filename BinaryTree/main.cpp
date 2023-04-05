@@ -18,8 +18,16 @@ protected:
 		Element(int Data, Element* pLeft = nullptr, Element* pRight = nullptr)
 			:Data(Data), pLeft(pLeft), pRight(pRight)
 		{
+#ifdef DEBUG
+
 			cout << "EConstructor:\t" << this << endl;
 		}
+#endif // DEBUG
+		bool isLeaf()const
+		{
+			return pLeft == pRight;
+		}
+
 		~Element()
 		{
 			cout << "EDestructor:\t" << this << endl;
@@ -52,6 +60,10 @@ public:
 	void insert(int Data)
 	{
 		insert(Data, Root);
+	}
+	void erase(int Data)
+	{
+		erase(Data, Root);
 	}
 	int minValue()const
 	{
@@ -109,6 +121,33 @@ private:
 		{
 			if (Root->pRight == nullptr)Root->pRight = new Element(Data);
 			else insert(Data, Root->pRight);
+		}
+	}
+	void erase(int Data, Element*& Root)
+	{
+		if (Root == nullptr)return;
+		erase(Data, Root->pLeft);
+		erase(Data, Root->pRight);
+		if (Data == Root->Data)
+		{
+			if (Root->pLeft == Root->pRight)
+			{
+				delete Root;
+				Root = nullptr;
+			}
+			else
+			{
+				if (Count(Root->pLeft) > Count(Root->pRight))
+				{
+					Root->Data = maxValue(Root->pLeft);
+					erase(maxValue(Root->pLeft), Root->pRight);
+				}
+				else
+				{
+					Root->Data = minValue(Root->pRight);
+					erase(minValue(Root->pRight), Root->pRight);
+				}
+			}
 		}
 	}
 	int minValue(Element* Root) const
@@ -188,8 +227,8 @@ public:
 		}
 	}
 };
-#define BASE_CHECK
-//#define DEPTH_CHECK
+//#define BASE_CHECK
+#define DEPTH_CHECK
 void main()
 {
 	setlocale(LC_ALL, "");
@@ -229,12 +268,15 @@ void main()
 #endif // BASE_CHECK
 #ifdef DEPTH_CHECK
 
-	Tree tree = { 50,25,75,16,32,64,80 };
+	Tree tree = { 50,25,75,16,32,64,80,48,49,85,91,58,68,67 };
 	tree.print();
 	cout << "Глубина дерева: " << tree.Depth() << endl;
-
-	Tree tree2 = tree;
-	tree2.print();
+	int value;
+	cout << "Введите удаляемое значение: "; cin >> value;
+		tree.erase(value);
+		tree.print();
+	/*Tree tree2 = tree;
+	tree2.print();*/
 #endif // DEPTH_CHECK
 
 }
